@@ -11,9 +11,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by ysahn on 3/1/2017.
+ * Parses Liquibase XML.
  */
 public class LiquibaseXmlReader extends XmlBasedReader {
 
@@ -133,7 +135,41 @@ public class LiquibaseXmlReader extends XmlBasedReader {
             fieldSpec.setComment(attrib);
         }
 
+
+        NodeList nodeList = el.getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node currentNode = nodeList.item(i);
+            if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element elem = (Element) currentNode;
+                if ("constraints".equals(elem.getTagName())) {
+                    this.processConstraintEl(elem, fieldSpec);
+                } else {
+                    throw new IllegalArgumentException("Unexpected element "+elem.getTagName()+" found.");
+                }
+            }
+        }
+
         return fieldSpec;
+    }
+
+    private void processConstraintEl(Element el, FieldDef fieldSpec)
+    {
+        Map<String, Object> contraints = new HashMap<String, Object>();
+
+        String attrib = el.getAttribute("nullable");
+        if (attrib != null) {
+            fieldSpec.setNullable(Boolean.parseBoolean(attrib));
+        }
+        attrib = el.getAttribute("primaryKey");
+        if (attrib != null) {
+            fieldSpec.setPrimaryKey(Boolean.parseBoolean(attrib));
+        }
+
+        attrib = el.getAttribute("unique");
+        if (attrib != null) {
+            fieldSpec.setUnique(Boolean.parseBoolean(attrib));
+        }
     }
 
     private DataType parseDataType(String typeStr)
@@ -167,12 +203,14 @@ public class LiquibaseXmlReader extends XmlBasedReader {
             dataType.setType(DataType.TYPE_LONG);
         } else if (typeStrLower.startsWith(TYPE_NUMBER)) {
             dataType.setType(DataType.TYPE_NUMBER);
+            // TODO: Extract size
         } else if (typeStrLower.startsWith(TYPE_SHORT)) {
             dataType.setType(DataType.TYPE_SHORT);
         } else if (typeStrLower.startsWith(TYPE_TIME)) {
             dataType.setType(DataType.TYPE_TIME);
         } else if (typeStrLower.startsWith(TYPE_VARCHAR)) {
             dataType.setType(DataType.TYPE_VARCHAR);
+            // TODO: Extract size
         }
         return dataType;
     }
