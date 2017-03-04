@@ -3,20 +3,28 @@ package com.altenia.tool.schema;
 import java.util.LinkedHashMap;
 
 /**
- * Created by ysahn on 3/1/2017.
+ * Class that represents Entity (a table)
  */
 public class EntityDef extends DefObject{
 
-    private LinkedHashMap<String, FieldDef> fields;
+    public static final String PROP_CATALOG = "catalogName";
+    public static final String PROP_SCHEMA = "schemaName";
+    public static final String PROP_TABLESPACE = "tablespace";
+
+    private LinkedHashMap<String, FieldDef> fields = new LinkedHashMap<>();
 
     public EntityDef(){}
 
-    public EntityDef(String name, LinkedHashMap<String, FieldDef> fields) {
+    public EntityDef(String name) {
         super(name);
-        this.fields = fields;
     }
 
     public LinkedHashMap<String, FieldDef> getFields() {
         return fields;
+    }
+
+    public void addField(FieldDef fieldSpec)
+    {
+        fields.put(fieldSpec.getName(), fieldSpec);
     }
 }

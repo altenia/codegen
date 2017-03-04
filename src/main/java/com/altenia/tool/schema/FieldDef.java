@@ -1,13 +1,9 @@
 package com.altenia.tool.schema;
 
 /**
- * Created by ysahn on 3/1/2017.
+ * Class that represents Field
  */
 public class FieldDef extends DefObject {
-
-    enum DataType {
-        String, Integer
-    }
 
     private DataType dataType;
     private boolean isNullable = false;
@@ -20,7 +16,12 @@ public class FieldDef extends DefObject {
 
     public FieldDef(){}
 
-    public FieldDef(DataType dataType, boolean isNullable, boolean isPrimaryKey, boolean isUnique, boolean isAutoIncrement, Object defaultValue, FieldDef foreignReferene, String comment) {
+    public FieldDef(String name){
+        super(name);
+    }
+
+    public FieldDef(String name, DataType dataType, boolean isNullable, boolean isPrimaryKey, boolean isUnique, boolean isAutoIncrement, Object defaultValue, FieldDef foreignReferene, String comment) {
+        this(name);
         this.dataType = dataType;
         this.isNullable = isNullable;
         this.isPrimaryKey = isPrimaryKey;
@@ -35,36 +36,70 @@ public class FieldDef extends DefObject {
         return dataType;
     }
 
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
+    }
+
     public boolean isNullable() {
         return isNullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        isNullable = nullable;
     }
 
     public boolean isPrimaryKey() {
         return isPrimaryKey;
     }
 
+    public void setPrimaryKey(boolean primaryKey) {
+        isPrimaryKey = primaryKey;
+    }
+
     public boolean isUnique() {
         return isUnique;
+    }
+
+    public void setUnique(boolean unique) {
+        isUnique = unique;
     }
 
     public boolean isAutoIncrement() {
         return isAutoIncrement;
     }
 
+    public void setAutoIncrement(boolean autoIncrement) {
+        isAutoIncrement = autoIncrement;
+    }
+
     public Object getDefaultValue() {
         return defaultValue;
+    }
+
+    public void setDefaultValue(Object defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     public FieldDef getForeignReferene() {
         return foreignReferene;
     }
 
+    public void setForeignReferene(FieldDef foreignReferene) {
+        this.foreignReferene = foreignReferene;
+    }
+
+    @Override
     public String getComment() {
         return comment;
     }
 
+    @Override
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public static class FieldDefBuilder {
+        private String name;
         private DataType dataType;
         private boolean isNullable;
         private boolean isPrimaryKey;
@@ -73,6 +108,11 @@ public class FieldDef extends DefObject {
         private Object defaultValue;
         private FieldDef foreignReferene;
         private String comment;
+
+        public FieldDefBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
 
         public FieldDefBuilder setDataType(DataType dataType) {
             this.dataType = dataType;
@@ -115,7 +155,7 @@ public class FieldDef extends DefObject {
         }
 
         public FieldDef createFieldDef() {
-            return new FieldDef(dataType, isNullable, isPrimaryKey, isUnique, isAutoIncrement, defaultValue, foreignReferene, comment);
+            return new FieldDef(name, dataType, isNullable, isPrimaryKey, isUnique, isAutoIncrement, defaultValue, foreignReferene, comment);
         }
     }
 }

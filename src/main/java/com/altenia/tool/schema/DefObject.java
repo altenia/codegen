@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ysahn on 3/1/2017.
+ * Base of all objects in the schema.
  */
 public class DefObject {
     protected String name;
@@ -25,7 +25,20 @@ public class DefObject {
         return comment;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Map<String, Object> getProperties() {
         return properties;
+    }
+
+    public void putProperty(String key, Object value)
+    {
+        this.properties.put(key, value);
+    }
+
+    public Object getProperty(String key) {
+        return this.properties.get(key);
     }
 }

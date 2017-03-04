@@ -3,11 +3,16 @@ package com.altenia.tool.schema;
 import java.util.LinkedHashMap;
 
 /**
- * Created by ysahn on 3/1/2017.
+ * Class that represents a schema, which is a collection of entities.
  */
 public class SchemaDef extends DefObject {
 
-    public LinkedHashMap<String, EntityDef> entities;
+    public LinkedHashMap<String, EntityDef> entities = new LinkedHashMap<>();
+
+    public SchemaDef(String name)
+    {
+        super(name);
+    }
 
     public SchemaDef(String name, LinkedHashMap<String, EntityDef> entities) {
         super(name);
@@ -16,5 +21,10 @@ public class SchemaDef extends DefObject {
 
     public LinkedHashMap<String, EntityDef> getEntities() {
         return entities;
+    }
+
+    public void addEntity(EntityDef entity)
+    {
+        this.entities.put(entity.getName(), entity);
     }
 }
