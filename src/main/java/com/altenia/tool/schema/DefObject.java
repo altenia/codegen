@@ -1,5 +1,7 @@
 package com.altenia.tool.schema;
 
+import com.google.common.base.CaseFormat;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,16 @@ public class DefObject {
 
     public String getName() {
         return name;
+    }
+
+    public String getNameCamelCase()
+    {
+        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, this.getName());
+    }
+
+    public String getNameSnakeCase()
+    {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.getName());
     }
 
     public String getComment() {
