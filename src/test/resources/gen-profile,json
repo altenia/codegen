@@ -1,0 +1,29 @@
+{
+	"project": "Sample",
+	"source": "",
+	"target": null,
+	"defaultPackage": null,
+
+	"readerClass": "com.altenia.tool.reader.LiquibaseXmlReader",
+	"genlets": [{
+		"genletClass": "com.altenia.tool.codegen.genlet.javagen.JavaEntityGenlet",
+		"config": {
+			"typeSuffix": ""
+		}
+	}, {
+		"genletClass": "com.altenia.tool.codegen.genlet.javagen.JavaSpringRepositoryGenlet",
+		"config": {
+			"typeSuffix": "Controller"
+		}
+	}, {
+		"genletClass": "com.altenia.tool.codegen.genlet.javagen.JavaServiceGenlet",
+		"config": {
+			"typeSuffix": "Controller"
+		}
+	}, {
+		"genletClass": "com.altenia.tool.codegen.genlet.javagen.JavaSpringControllerGenlet",
+		"config": {
+			"typeSuffix": "Controller"
+		}
+	}]
+}

@@ -1,9 +1,0 @@
-{
-  "project": "Sample",
-  "input":"",
-  "codegen": [
-    {
-      "genletClass": "EntityGen"
-    }
-  ]
-}

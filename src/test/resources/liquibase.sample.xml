@@ -8,6 +8,10 @@
 
     <changeSet id="1" author="john">
         <createTable tableName="employee">
+            <column name="id" type="long" remarks="Primary Key">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
             <column name="active" type="boolean" defaultValueBoolean="true"/>
             <column name="ename" type="varchar2(14)"
                     remarks="The first and last name"/>
