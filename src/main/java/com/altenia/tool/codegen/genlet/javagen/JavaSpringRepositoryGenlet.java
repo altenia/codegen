@@ -11,6 +11,7 @@ import javax.lang.model.element.Modifier;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.File;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class JavaSpringRepositoryGenlet extends Genlet {
             throw new IllegalStateException("Exception", e);
         }
 
-        return new CodeGeneration(packageName + entity.getNameCamelCase(), code.toString());
+        return new CodeGeneration(packageName.replace(".", File.separator) + File.separator + className + ".java", code.toString());
     }
 
     protected MethodSpec buildFinderSpec(EntityDef entity, FieldDef field)

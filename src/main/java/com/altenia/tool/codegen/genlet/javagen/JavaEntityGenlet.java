@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -92,7 +93,7 @@ public class JavaEntityGenlet extends Genlet {
             throw new IllegalStateException("Exception", e);
         }
 
-        return new CodeGeneration(packageName + entity.getNameCamelCase(), code.toString());
+        return new CodeGeneration(packageName.replace(".", File.separator) + File.separator + className + ".java", code.toString());
     }
 
     protected MethodSpec buildGetterSpec(FieldDef field)
@@ -100,6 +101,7 @@ public class JavaEntityGenlet extends Genlet {
         String getterName = "get" + StringUtils.titleCase(field.getNameCamelCase());
         Type type = DataType.equivalentJavaType(field.getDataType().getType());
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(getterName)
+                .addModifiers(Modifier.PUBLIC)
                 .returns(type)
                 .addStatement("return this.$L", field.getNameCamelCase());
         return methodBuilder.build();

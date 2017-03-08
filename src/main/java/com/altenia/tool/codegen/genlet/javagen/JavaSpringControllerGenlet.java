@@ -8,6 +8,7 @@ import com.altenia.tool.util.StringUtils;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
+import java.io.File;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -165,7 +166,7 @@ public class JavaSpringControllerGenlet extends Genlet {
             throw new IllegalStateException("Exception", e);
         }
 
-        return new CodeGeneration(packageName + entity.getNameCamelCase(), code.toString());
+        return new CodeGeneration(packageName.replace(".", File.separator) + File.separator + className + ".java", code.toString());
     }
 
     protected MethodSpec buildFinderSpec(EntityDef entity, FieldDef field)

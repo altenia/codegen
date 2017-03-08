@@ -8,7 +8,7 @@ Service class, Controller class, and Unit/Integration test codes.
 
 # Usage
 
-`java -jar codegen-1.0-SNAPSHOT.jar [-t target folder] [-c config file] <source file>`
+`java -jar codegen-{version}.jar  [-log] [-console] [-t target folder] [-c config file] <source file>`
 
 Example:
   ```java -jar codegen-1.0-SNAPSHOT.jar C:\Users\ysahn\IdeaProjects\codegen\src\test\resources\liquibase.sample.xml```

@@ -7,8 +7,9 @@ import com.altenia.tool.schema.SchemaDef;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ public class CodeGenerator {
         Options options = new Options();
         options.addOption("c", true, "configuration");
         options.addOption("t", true, "target directory");
+        options.addOption("console", false, "output to console only");
+        options.addOption("log", false, "output log");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse( options, args);
@@ -43,6 +46,8 @@ public class CodeGenerator {
 
         config.setSource(cmd.getArgList().get(0));
         config.setTarget(cmd.getOptionValue("t", "codegen"));
+        config.setOption("console", cmd.hasOption("console"));
+        config.setOption("log", cmd.hasOption("log"));
 
         CodeGenerator generator = new CodeGenerator();
         generator.generate(config);
@@ -67,6 +72,7 @@ public class CodeGenerator {
             throw new IllegalArgumentException("Could not instantiate reader " + config.getReaderClass());
         }
 
+        int filesCount = 0;
         for( Map<String, Object> genletEntry: genletEntries) {
 
             try {
@@ -81,14 +87,59 @@ public class CodeGenerator {
                 List<CodeGeneration> codes = genlet.generate(schema);
 
                 for (CodeGeneration code : codes) {
-                    System.out.print(code.getCode());
+                    if (config.getBooleanOption("log", false)) {
+                        System.out.print("Generating resource '" + code.getResourceName()+ "'");
+                    }
+                    if (config.getBooleanOption("console", false)) {
+                        System.out.print(code.getCode());
+                    } else {
+                        if (config.getBooleanOption("log", false)) {
+                            System.out.println(" into directory: " + config.getTarget());
+                        }
+                        output(config.getTarget(), code.getResourceName(), code.getCode());
+                    }
+                    filesCount++;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        // TODO: implement
+        if (config.getBooleanOption("log", false)) {
+            System.out.println("Completed generating " + filesCount + " files.");
+        }
+    }
+
+    static void output(String basePath, String resourceName, String content)
+    {
+        /*
+        Path currentRelativePath = Paths.get("");
+        String cwd = currentRelativePath.toAbsolutePath().toString();
+        */
+
+        File basePathFile = new File(basePath);
+        if (!basePathFile.isDirectory())
+            throw new IllegalArgumentException("Path " + basePath +" is not a valid directory");
+
+        basePath = ((basePath != null) ? basePath : "");
+        if (basePath.trim().length() > 0 && !basePath.endsWith(File.separator)) {
+            basePath += File.separator;
+        }
+
+        //String resourePath = resourceName.replace(".", File.separator);
+        String fullPath = basePath + resourceName;
+        File file = new File(fullPath);
+
+        try {
+            file.getParentFile().mkdirs();
+
+            PrintWriter writer = new PrintWriter(file);
+            writer.print(content);
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static Config loadConfig(String filepath) throws IOException {
